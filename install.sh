@@ -145,7 +145,10 @@ cat > "$APP_DIR/Contents/Info.plist" << 'PLIST'
 PLIST
 
 # Use Warp icon for the notification app
-cp "/Applications/Warp.app/Contents/Resources/Warp.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
+WARP_ICON=$(find /Applications/Warp.app/Contents/Resources -name "*.icns" -print -quit 2>/dev/null)
+if [ -n "$WARP_ICON" ]; then
+    cp "$WARP_ICON" "$APP_DIR/Contents/Resources/AppIcon.icns"
+fi
 
 # Compile
 swiftc -o "$APP_DIR/Contents/MacOS/ClaudeNotify" "$NOTIFY_DIR/ClaudeNotify.swift" \
