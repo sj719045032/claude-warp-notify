@@ -125,7 +125,7 @@ cat > "$APP_DIR/Contents/Info.plist" << 'PLIST'
     <key>CFBundleIdentifier</key>
     <string>com.warp.claude-notify</string>
     <key>CFBundleName</key>
-    <string>Claude Code</string>
+    <string>Claude Notify</string>
     <key>CFBundleExecutable</key>
     <string>ClaudeNotify</string>
     <key>CFBundlePackageType</key>
