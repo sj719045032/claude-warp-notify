@@ -37,6 +37,14 @@ if ! [ -d "/Applications/Warp.app" ]; then
 fi
 
 mkdir -p "$NOTIFY_DIR"
+mkdir -p "$HOME/.claude"
+
+# Save install script for later uninstall
+SELF_SCRIPT="$(cat "$0" 2>/dev/null || curl -fsSL https://raw.githubusercontent.com/sj719045032/claude-warp-notify/main/install.sh 2>/dev/null)"
+if [ -n "$SELF_SCRIPT" ]; then
+    echo "$SELF_SCRIPT" > "$NOTIFY_DIR/install.sh"
+    chmod +x "$NOTIFY_DIR/install.sh"
+fi
 
 # --- Write Swift source ---
 cat > "$NOTIFY_DIR/ClaudeNotify.swift" << 'SWIFT'
@@ -181,6 +189,7 @@ chmod +x "$NOTIFY_DIR/send-notification.sh"
 
 # --- Configure hooks in settings.json ---
 echo "==> Configuring hooks..."
+mkdir -p "$(dirname "$SETTINGS")"
 if [ ! -f "$SETTINGS" ]; then
     echo '{}' > "$SETTINGS"
 fi
