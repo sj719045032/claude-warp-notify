@@ -144,12 +144,8 @@ cat > "$APP_DIR/Contents/Info.plist" << 'PLIST'
 </plist>
 PLIST
 
-# Copy icon: prefer Claude.app, fall back to Warp
-if [ -f "/Applications/Claude.app/Contents/Resources/electron.icns" ]; then
-    cp "/Applications/Claude.app/Contents/Resources/electron.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
-elif [ -f "/Applications/Warp.app/Contents/Resources/Warp.icns" ]; then
-    cp "/Applications/Warp.app/Contents/Resources/Warp.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
-fi
+# Use Warp icon for the notification app
+cp "/Applications/Warp.app/Contents/Resources/Warp.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 
 # Compile
 swiftc -o "$APP_DIR/Contents/MacOS/ClaudeNotify" "$NOTIFY_DIR/ClaudeNotify.swift" \
