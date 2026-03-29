@@ -1,15 +1,15 @@
 # Claude Code Warp Notify
 
-macOS native notifications for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) when running in [Warp](https://www.warp.dev/) terminal.
+Desktop notifications for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) when running in [Warp](https://www.warp.dev/) terminal, powered by Warp's native [OSC 777](https://docs.warp.dev/features/notifications#custom-notification-hooks-osc-9--osc-777) support.
 
 When Claude Code finishes a task and Warp is **not** in the foreground, you get a notification with:
 
-- **Claude icon** on the notification
+- **Event type** in the title (task complete / waiting for input)
 - **Project path** in the title
 - **Last message** from Claude as the body
-- **Click to switch** back to Warp
+- **Click to focus** Warp window
 
-No notification is sent when Warp is already focused — no interruptions while you're actively working.
+No notification when Warp is already focused — no interruptions while you're actively working.
 
 ## Install
 
@@ -25,29 +25,28 @@ cd claude-warp-notify
 bash install.sh
 ```
 
-After installing, **restart Claude Code** for hooks to take effect. The first notification will ask for macOS notification permission — click **Allow**.
+After installing, **restart Claude Code** for hooks to take effect.
 
 ## Requirements
 
-- macOS
+- macOS / Linux / Windows (where Warp supports notifications)
 - [Warp](https://www.warp.dev/) terminal
-- Xcode Command Line Tools (`xcode-select --install`)
-- Python 3 (pre-installed on macOS)
+- [jq](https://jqlang.github.io/jq/) (macOS: `brew install jq` or pre-installed on newer versions)
 
 ## How it works
 
 The installer:
 
-1. Compiles a lightweight native macOS app (`ClaudeNotify.app`) that sends notifications via `UserNotifications` framework
-2. Creates a hook script that extracts the project path and last message from Claude Code's hook JSON
+1. Creates a hook script (`~/.claude/notify/send-notification.sh`) that extracts message and project path from Claude Code's hook JSON via `jq`
+2. Sends a desktop notification using Warp's OSC 777 escape sequence (`\033]777;notify;<title>;<body>\007`)
 3. Registers `Notification` and `Stop` hooks in `~/.claude/settings.json`
 
-The notification icon uses Claude.app's icon if installed, otherwise falls back to Warp's icon.
+No compilation, no signing, no extra apps — just a single shell script.
 
 ## Uninstall
 
 ```bash
-bash ~/.claude/notify/install.sh --uninstall
+bash install.sh --uninstall
 ```
 
 Then remove the `Notification` and `Stop` hook entries from `~/.claude/settings.json`.
